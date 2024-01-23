@@ -67,7 +67,6 @@ namespace Game
                 fourValidInputs =
                     [Constant.OneStr, Constant.TwoStr, Constant.ThreeStr, Constant.FourStr],
                 StatsRequirementMsg =
-
                     [
                         Constant.HpMenuMsg + Constant.RangedInMsg,
                         Constant.AttackMenuMsg + Constant.RangedInMsg,
