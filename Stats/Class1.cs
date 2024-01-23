@@ -31,7 +31,7 @@ namespace Stats
             else
             {
                 rowToPick =
-                    difficulty == Constant.DifficultyDifficult
+                    difficulty == Constant.DifficultyEasy
                         ? Constant.MinValueRow
                         : Constant.MaxValueRow;
             }
