@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using System.Security.AccessControl;
 using System.Threading;
 using BattleMethod;
 using Checker;
@@ -15,11 +16,13 @@ namespace Game
         public static void Main()
         {
             int roundCounter = 0,
-                remainingAttempts = Constant.MaxAttempts;
-            int[] characters = { 0, 1, 2, 3, 4 },
-                randomTurns = { 4, 4, 4, 4 },
-                abilityEffect = { 2, 100, 3, 500 },
-                currentCoolDown = { 0, 0, 0, 0 };
+                remainingAttempts = Constant.MaxAttempts,
+                monsterStun = 0,
+                BarbarianAbilityDuracion = 0;
+            int[] characters =  { 0, 1, 2, 3, 4 },
+                randomTurns =  { 4, 4, 4, 4 },
+                abilityEffect =  { 2, 100, 3, 500 },
+                currentCoolDown =  { 0, 0, 0, 0 };
             float userValue;
 
             float[,,] statsValues =
@@ -38,15 +41,15 @@ namespace Game
                 }
             };
 
-            float[,] maxValues = new float[5, 3],
-                currentValues = new float[5, 3];
+            float[,] maxStats = new float[5, 3],
+                currentStats = new float[5, 3];
 
             bool validInput,
                 hasRemainingAttemptsMenu = true,
                 hasRemainingAttempts = true;
-            bool[] isHero = { true, true, true, true, false },
-                isGuarding = { false, false, false, false },
-                Alive = { true, true, true, true, true };
+            bool[] isHero =  { true, true, true, true, false },
+                isGuarding =  { false, false, false, false },
+                Alive =  { true, true, true, true, true };
 
             string userCommand,
                 difficulty = "0";
@@ -70,7 +73,7 @@ namespace Game
                         Constant.AttackMenuMsg + Constant.RangedInMsg,
                         Constant.DmgReductionMenuMsg + Constant.RangedInMsg
                     ],
-                boolValidInputs = { Constant.Yes, Constant.No };
+                boolValidInputs =  { Constant.Yes, Constant.No };
 
             Console.WriteLine(Constant.MenuMsg);
             do
@@ -116,91 +119,209 @@ namespace Game
                         );
                     } while (!validInput && hasRemainingAttemptsMenu);
                 }
-
-                if (userCommand.ToUpper().Equals(Constant.Yes))
+                if (hasRemainingAttemptsMenu)
                 {
-                    for (int i = 0; i < names.Length; i++)
+                    if (userCommand.ToUpper().Equals(Constant.Yes))
                     {
-                        string oldName = names[i];
-                        Console.WriteLine(Constant.RequestNameMsg, names[i]);
-                        names[i] = Utility.NameMayus(Console.ReadLine() ?? names[i]);
-                    }
-                }
-
-                if (userCommand.ToUpper().Equals(Constant.Yes))
-                {
-                    for (int i = 0; i < names.Length; i++)
-                    {
-                        string oldName = names[i];
-                        Console.WriteLine(Constant.RequestNameMsg, names[i]);
-                        names[i] = Utility.NameMayus(Console.ReadLine() ?? names[i]);
-                    }
-                }
-                if (difficulty.Equals(Constant.DifficultyPersonalized))
-                {
-                    for (int character = 0; character < characters.Length; character++)
-                    {
-                        int minValueRow = 0,
-                            maxValueRow = 1;
-
-                        for (int statsType = 0; statsType < 3; statsType++)
+                        for (int i = 0; i < names.Length; i++)
                         {
-                            do
-                            {
-                                Console.WriteLine(
-                                    $"{Constant.InsertRequestMsg}\n {StatsRequirementMsg[statsType]}",
-                                    statsValues[statsType, minValueRow, character],
-                                    statsValues[statsType, maxValueRow, character]
-                                );
-                                userValue = Convert.ToSingle(Console.ReadLine());
-                                validInput = Check.InRange(
-                                    userValue,
-                                    statsValues[statsType, 0, character],
-                                    statsValues[statsType, 1, character]
-                                );
-                                if (!validInput)
-                                {
-                                    remainingAttempts--;
-                                    hasRemainingAttempts = Check.GreaterThan(remainingAttempts);
+                            string oldName = names[i];
+                            Console.WriteLine(Constant.RequestNameMsg, names[i]);
+                            names[i] = Utility.NameMayus(Console.ReadLine() ?? names[i]);
+                        }
+                    }
 
-                                    if (hasRemainingAttempts)
+                    if (difficulty.Equals(Constant.DifficultyPersonalized))
+                    {
+                        for (int character = 0; character < characters.Length; character++)
+                        {
+                            int minValueRow = 0,
+                                maxValueRow = 1;
+
+                            for (int statsType = 0; statsType < 3; statsType++)
+                            {
+                                do
+                                {
+                                    Console.WriteLine(
+                                        $"{Constant.InsertRequestMsg}\n {StatsRequirementMsg[statsType]}",
+                                        statsValues[statsType, minValueRow, character],
+                                        statsValues[statsType, maxValueRow, character]
+                                    );
+                                    userValue = Convert.ToSingle(Console.ReadLine());
+                                    validInput = Check.InRange(
+                                        userValue,
+                                        statsValues[statsType, 0, character],
+                                        statsValues[statsType, 1, character]
+                                    );
+                                    if (!validInput)
                                     {
-                                        Console.WriteLine(Constant.ErrorMsg);
+                                        remainingAttempts--;
+                                        hasRemainingAttempts = Check.GreaterThan(remainingAttempts);
+
+                                        if (hasRemainingAttempts)
+                                        {
+                                            Console.WriteLine(Constant.ErrorMsg);
+                                        }
+                                        else
+                                        {
+                                            Console.WriteLine(Constant.DefaultHeroStatsMsg);
+                                            maxStats[character, statsType] = statsValues[
+                                                statsType,
+                                                0,
+                                                character
+                                            ];
+                                        }
                                     }
                                     else
                                     {
-                                        Console.WriteLine(Constant.DefaultHeroStatsMsg);
-                                        maxValues[character, statsType] = statsValues[
-                                            statsType,
-                                            0,
-                                            character
-                                        ];
+                                        remainingAttempts = Constant.MaxAttempts;
+                                        hasRemainingAttempts = Check.GreaterThan(remainingAttempts);
+                                        maxStats[character, statsType] = userValue;
+                                    }
+                                } while (!validInput && hasRemainingAttempts);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        for (int character = 0; character < characters.Length; character++)
+                        {
+                            Stat.SetPlayerCap(
+                                character,
+                                statsValues,
+                                maxStats,
+                                isHero[character],
+                                difficulty
+                            );
+                        }
+                        currentStats = maxStats;
+                        while ((Alive[0] || Alive[1] || Alive[2] || Alive[3]) && Alive[4])
+                        {
+                            Battle.RandomOrder(randomTurns);
+                            for (int character = 0; character < characters.Length; character++)
+                            {
+                                if (character < 4)
+                                {
+                                    if (
+                                        Check.GreaterThan(
+                                            currentStats[randomTurns[character], Constant.HpValueColumn]
+                                        )
+                                    )
+                                    {
+                                        Console.WriteLine(
+                                            Constant.RequestCommandMsg,
+                                            names[randomTurns[character]]
+                                        );
+                                        do
+                                        {
+                                            userCommand = Console.ReadLine() ?? "";
+                                            validInput = Check.ValidateInput(
+                                                userCommand,
+                                                threeValidInputs
+                                            );
+                                            Msg.ValidateInput(
+                                                ref remainingAttempts,
+                                                ref hasRemainingAttempts,
+                                                validInput,
+                                                Constant.DefaultCommandMsg
+                                            );
+
+                                            if (
+                                                userCommand.Equals(Constant.TwoStr)
+                                                && Check.GreaterThan(
+                                                    currentCoolDown[randomTurns[character]]
+                                                )
+                                            )
+                                            {
+                                                Msg.NoticeOnCoolDown(
+                                                    currentCoolDown[randomTurns[character]]
+                                                );
+                                                validInput = !validInput;
+                                            }
+                                            ;
+                                        } while (!validInput && hasRemainingAttempts);
+                                        if (hasRemainingAttempts)
+                                        {
+                                            switch (userCommand)
+                                            {
+                                                case "1":
+                                                    Battle.Attack(
+                                                        randomTurns[character],
+                                                        4,
+                                                        currentStats,
+                                                        names
+                                                    );
+                                                    break;
+
+                                                case "3":
+                                                    isGuarding[randomTurns[character]] = true;
+                                                    break;
+                                                case "2":
+                                                    switch (randomTurns[character])
+                                                    {
+                                                        case 0:
+                                                            Battle.ArcherAbility(
+                                                                randomTurns[character],
+                                                                4,
+                                                                monsterStun,
+                                                                abilityEffect,
+                                                                currentCoolDown,
+                                                                names
+                                                            );
+                                                            break;
+                                                        case 1:
+                                                            Battle.BarbarianAbility(
+                                                                 randomTurns[character],
+                                                                 ref BarbarianAbilityDuracion,
+                                                                 currentCoolDown,
+                                                                 currentStats,
+                                                                 abilityEffect,
+                                                                 names
+                                                             );
+                                                            break;
+                                                        case 2:
+                                                            Battle.MageAbility(
+                                                                randomTurns[character],
+                                                                4,
+                                                                abilityEffect,
+                                                                currentCoolDown,
+                                                                currentStats,
+                                                                names
+                                                            );
+                                                            break;
+                                                        case 3:
+                                                            Battle.DruidAbility(
+                                                                randomTurns[character],
+                                                                currentStats,
+                                                                maxStats,
+                                                                abilityEffect,
+                                                                names
+                                                            );
+                                                            break;
+                                                    }
+                                                    break;
+                                            }
+                                        }
+                                        
+                                        Alive[4] = Check.GreaterThan(currentStats[4, 0]);
+
+                                    }
+                                }else if(!Check.GreaterThan(monsterStun))
+                                {
+                                    Console.WriteLine(Constant.MonseterAttackMsg, names[4]);
+                                    for(int objective = 0; objective < characters.Length - 1; objective++)
+                                    {
+                                        if (Check.GreaterThan(currentStats[objective,0])) 
+                                        {
+                                            Battle.Attack(4, objective, currentStats, names, isGuarding[objective]);
+                                        }
+                                        Alive[objective] = Check.GreaterThan(currentStats[objective, 0]);
                                     }
                                 }
-                                else
-                                {
-                                    remainingAttempts = Constant.MaxAttempts;
-                                    hasRemainingAttempts = Check.GreaterThan(remainingAttempts);
-                                    maxValues[character, statsType] = userValue;
-                                }
-                            } while (!validInput && hasRemainingAttempts);
+                            }
                         }
                     }
                 }
-                else
-                {
-                    for (int character = 0; character < characters.Length; character++)
-                    {
-                        Stat.SetPlayerCap(
-                            character,
-                            statsValues,
-                            maxValues,
-                            isHero[character],
-                            difficulty
-                        );
-                    }
-                }
-
             }
         }
     }

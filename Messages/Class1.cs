@@ -41,5 +41,6 @@ namespace Menssages
         {
             Console.WriteLine(Constant.OnCooldown, RemainingCD);
         }
+       
     }
 }
