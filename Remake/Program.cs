@@ -100,8 +100,34 @@ namespace Game
                     );
                     difficulty = userCommand;
                 } while (!validInput && hasRemainingAttemptsMenu);
-    
-                
+
+                if (hasRemainingAttemptsMenu)
+                {
+                    Console.WriteLine(Constant.RenameMsg);
+                    do
+                    {
+                        userCommand = Console.ReadLine() ?? "";
+                        validInput = Check.ValidateInput(userCommand, boolValidInputs);
+                        Msg.ValidateInput(
+                            ref remainingAttempts,
+                            ref hasRemainingAttemptsMenu,
+                            validInput,
+                            Constant.ErrorEndMsg
+                        );
+                    } while (!validInput && hasRemainingAttemptsMenu);
+                }
+
+                if (userCommand.ToUpper().Equals(Constant.Yes))
+                {
+                    for (int i = 0; i < names.Length; i++)
+                    {
+                        string oldName = names[i];
+                        Console.WriteLine(Constant.RequestNameMsg, names[i]);
+                        names[i] = Utility.NameMayus(Console.ReadLine() ?? names[i]);
+                    }
+                }
+
+
             }
         }
     }
