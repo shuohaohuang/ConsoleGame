@@ -3,7 +3,7 @@
     public class Constant
     {
         public const string AttackMenuMsg = "Attack: ",
-            CriticalAttackMsg = "{0} has executed a critical hit.\n",
+            CriticalAttackMsg = "\n{0} has executed a critical hit.",
             CurrentStatus = "{0} : {1} Hp",
             DefaultCommandMsg = "Too many attempts, default command: attack",
             DefaultDifficultyMsg = "Too many attempts, default difficulty: Random\n",
@@ -22,7 +22,7 @@
             EndMsg = "End of the game\n",
             ErrorEndMsg = "Too many attempts, end of the game\n",
             ErrorMsg = "Wrong insert, try again\n",
-            FailedAttackMsg = "{0} has failed the attack\n",
+            FailedAttackMsg = "\n{0} has failed the attack",
             FourStr = "4",
             HpMenuMsg = "Hit Points: ",
             InsertRequestMsg = "Insert stat value",
@@ -34,7 +34,7 @@
             RenamedMsg = "{0}'s new name is {1}",
             RenameMsg = "Do you want rename characters:\n[Y/N]\n",
             RequestCommandMsg =
-                "Insert {0}'s action"
+                "\nInsert {0}'s action"
                 + "\n\t1.Normal attack"
                 + "\n\t2. Character's ability"
                 + "\n\t3. Guard \n",

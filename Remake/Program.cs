@@ -262,7 +262,7 @@ namespace Game
                                                             Battle.ArcherAbility(
                                                                 randomTurns[character],
                                                                 4,
-                                                                monsterStun,
+                                                                ref monsterStun,
                                                                 abilityEffect,
                                                                 currentCoolDown,
                                                                 names
@@ -316,8 +316,23 @@ namespace Game
                                         }
                                         Alive[objective] = Check.GreaterThan(currentStats[objective, 0]);
                                     }
+                                    for (int i = 0; i < Alive.Length; i++)
+                                    {
+                                        Alive[i] = Check.GreaterThan(currentStats[i,0]);
+                                    }
                                 }
                             }
+                            Battle.ShowStats(currentStats, names);
+                            BarbarianAbilityDuracion--;
+                            if (Check.GreaterThan(BarbarianAbilityDuracion))
+                                currentStats[1, 2] = maxStats[1, 2];
+                            monsterStun--;
+                            roundCounter++;
+                            for(int i = 0; i < currentCoolDown.Length; i++)
+                            {
+                                currentCoolDown[i]--;
+                            }
+                            
                         }
                     }
                 }

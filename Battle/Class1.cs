@@ -118,7 +118,7 @@ namespace BattleMethod
             return Check.InRange(random.Next(MaxProbability), probability);
         }
 
-        public static void ArcherAbility(int casterId, int defensorId, int monsterStun,int[] abilityEffecet,int[] currentCD, string[] names)
+        public static void ArcherAbility(int casterId, int defensorId, ref int monsterStun,int[] abilityEffecet,int[] currentCD, string[] names)
         {
             monsterStun = abilityEffecet[casterId];
             currentCD[casterId] = Constant.SkillCd;
@@ -177,6 +177,30 @@ namespace BattleMethod
                 }
             }
             
+        }
+
+        public static void ShowStats(float[,] currentStats, string[] names)
+        {
+            float[,] aux = currentStats;
+            string[] auxString = names;
+            for(int i = 0;i < currentStats.GetLength(0)-1; i++){
+                for(int j = i+1;j < currentStats.GetLength(0); j++){
+                    if (aux[i, 0] < aux[j, 0])
+                    {
+                        float auxi = aux[i, 0];
+                        aux[i, 0] = aux[j, 0];
+                        aux[j, 0] = auxi;
+
+                        string auxiString = auxString[i];
+                        auxString[i]= auxString[j];
+                        auxString[j]= auxiString;
+
+                    }
+                }
+            }
+            for(int i = 0; i < names.Length; i++){
+                Console.WriteLine(Constant.CurrentStatus, auxString[i], aux[i,0]);
+            }
         }
 
     }
