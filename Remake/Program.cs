@@ -330,7 +330,7 @@ namespace Game
                                     );
                                 }
                             }      //if !character<4 and monster isn't stunned then attacks
-                            else if (!Check.GreaterThanZero(monsterStun))
+                            else if (!Check.GreaterThanZero(monsterStun) && Alive[Constant.MonsterId])
                             {
                                 Console.WriteLine(
                                     Constant.MonseterAttackMsg,
@@ -388,6 +388,14 @@ namespace Game
                         {
                             currentCoolDown[i]--;
                         }
+                    }
+
+                    if (Alive[Constant.MonsterId]){
+                        Console.WriteLine(Constant.LoseMsg);
+                    }
+                    else
+                    {
+                        Console.WriteLine(Constant.WinMsg);
                     }
                 }
             }

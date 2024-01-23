@@ -56,7 +56,9 @@
             DruidName = "Druid",
             AttackMsg = "\n{0} has dealt {1} damage to {2}",
             DruidAbility = "{0} has healed {1} {2} hp",
-            MonseterAttackMsg = "\n{0} is about to attack next";
+            MonseterAttackMsg = "\n{0} is about to attack next",
+            WinMsg = "You Win",
+            LoseMsg = "You lose";
 
         public const int Zero = 0,
             One = 1,
