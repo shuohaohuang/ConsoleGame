@@ -4,20 +4,48 @@ namespace Stats
 {
     public class Stat
     {
-
-        public static void SetPlayerCap(int hero, float[,,] defaultValues, float[,] maxValues, bool isHero, string difficulty)
+        public static void SetPlayerCap(
+            int id,
+            float[,,] defaultValues,
+            float[,] maxValues,
+            bool isHero,
+            string difficulty
+        )
         {
-            if (difficulty.Equals(Constant.DifficultyDifficult) || difficulty.Equals(Constant.DifficultyEasy))
+            if (
+                difficulty.Equals(Constant.DifficultyDifficult)
+                || difficulty.Equals(Constant.DifficultyEasy)
+            )
             {
-                DefaultLevel(hero, defaultValues, maxValues, isHero, difficulty);
+                DefaultLevel(id, defaultValues, maxValues, isHero, difficulty);
             }
             else
             {
-                // RandomLevel(CharacterStats);
+                RandomLevel(id, defaultValues, maxValues);
             }
         }
 
-        public static void DefaultLevel(int hero, float[,,] defaultValues, float[,] maxValues, bool isHero, string difficulty)
+        public static void RandomLevel(int id, float[,,] defaultValues, float[,] maxValues)
+        {
+            const int ReachMaxNum = 1;
+
+            Random rnd = new();
+            for (int statType = 0; statType < defaultValues.GetLength(0); statType++)
+            {
+                maxValues[id, statType] = rnd.Next(
+                    (int)defaultValues[statType, Constant.MinValueRow, id],
+                    (int)defaultValues[statType, Constant.MaxValueRow , id ]+ ReachMaxNum
+                );
+            }
+        }
+
+        public static void DefaultLevel(
+            int hero,
+            float[,,] defaultValues,
+            float[,] maxValues,
+            bool isHero,
+            string difficulty
+        )
         {
             int rowToPick;
 
