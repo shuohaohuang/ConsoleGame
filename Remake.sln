@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34408.163
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remake", "Remake\Remake.csproj", "{1E4D2846-1C1A-4A02-B64B-27CCC5F5F0DC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1E4D2846-1C1A-4A02-B64B-27CCC5F5F0DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E4D2846-1C1A-4A02-B64B-27CCC5F5F0DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E4D2846-1C1A-4A02-B64B-27CCC5F5F0DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E4D2846-1C1A-4A02-B64B-27CCC5F5F0DC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {03D3890D-E2F1-42CE-A6F9-14B3BAB3CDFA}
+	EndGlobalSection
+EndGlobal
