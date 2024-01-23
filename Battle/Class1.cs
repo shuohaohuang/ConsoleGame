@@ -159,8 +159,9 @@ namespace BattleMethod
             
         }
 
-        public static void DruidAbility(int casterId, float[,] currentStats,float[,] maxStats, int[] abilityEffect,string[] names)
+        public static void DruidAbility(int casterId, int[] currentCD,float[,] currentStats,float[,] maxStats,  int[] abilityEffect,string[] names)
         {
+            currentCD[casterId] = Constant.SkillCd;
             for (int i = 0; i < currentStats.GetLength(0)-1; i++){
                 if (Check.GreaterThan(currentStats[i,0]))
                 {
@@ -181,8 +182,19 @@ namespace BattleMethod
 
         public static void ShowStats(float[,] currentStats, string[] names)
         {
-            float[,] aux = currentStats;
-            string[] auxString = names;
+            float[,] aux = new float[5, 3];
+            for (int i = 0; i < aux.GetLength(0); i++)
+            {
+                for (int j = 0; j < aux.GetLength(1); j++)
+                {
+                    aux[i, j] = currentStats[i, j];
+                }
+            }
+            string[] auxString= new string[5];
+            for(int i=0;  i < auxString.GetLength(0); i++)
+            {
+                auxString[i] = names[i];
+            }
             for(int i = 0;i < currentStats.GetLength(0)-1; i++){
                 for(int j = i+1;j < currentStats.GetLength(0); j++){
                     if (aux[i, 0] < aux[j, 0])

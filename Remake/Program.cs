@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Runtime.InteropServices;
-using System.Security.AccessControl;
-using System.Threading;
 using BattleMethod;
 using Checker;
 using Constants;
@@ -15,14 +12,14 @@ namespace Game
     {
         public static void Main()
         {
-            int roundCounter = 0,
+            int roundCounter = 1,
                 remainingAttempts = Constant.MaxAttempts,
                 monsterStun = 0,
                 BarbarianAbilityDuracion = 0;
             int[] characters =  { 0, 1, 2, 3, 4 },
                 randomTurns =  { 4, 4, 4, 4 },
                 abilityEffect =  { 2, 100, 3, 500 },
-                currentCoolDown =  { 0, 0, 0, 0 };
+                currentCoolDown = [0, 0, 0, 0];
             float userValue;
 
             float[,,] statsValues =
@@ -67,6 +64,7 @@ namespace Game
                 fourValidInputs =
                     [Constant.OneStr, Constant.TwoStr, Constant.ThreeStr, Constant.FourStr],
                 StatsRequirementMsg =
+
                     [
                         Constant.HpMenuMsg + Constant.RangedInMsg,
                         Constant.AttackMenuMsg + Constant.RangedInMsg,
@@ -75,6 +73,7 @@ namespace Game
                 boolValidInputs =  { Constant.Yes, Constant.No };
 
             Console.WriteLine(Constant.MenuMsg);
+            //Start Menu
             do
             {
                 userCommand = Console.ReadLine() ?? "";
@@ -105,6 +104,7 @@ namespace Game
 
                 if (hasRemainingAttemptsMenu)
                 {
+                    //rename Menu
                     Console.WriteLine(Constant.RenameMsg);
                     do
                     {
@@ -118,8 +118,10 @@ namespace Game
                         );
                     } while (!validInput && hasRemainingAttemptsMenu);
                 }
+
                 if (hasRemainingAttemptsMenu)
                 {
+                    //Rename characters
                     if (userCommand.ToUpper().Equals(Constant.Yes))
                     {
                         for (int i = 0; i < names.Length; i++)
@@ -130,27 +132,25 @@ namespace Game
                         }
                     }
 
+                    //Personalize Start or auto
                     if (difficulty.Equals(Constant.DifficultyPersonalized))
                     {
                         for (int character = 0; character < characters.Length; character++)
                         {
-                            int minValueRow = 0,
-                                maxValueRow = 1;
-
-                            for (int statsType = 0; statsType < 3; statsType++)
+                            for (int statsType = 0; statsType < Constant.StatsTypes; statsType++)
                             {
                                 do
                                 {
                                     Console.WriteLine(
                                         $"{Constant.InsertRequestMsg}\n {StatsRequirementMsg[statsType]}",
-                                        statsValues[statsType, minValueRow, character],
-                                        statsValues[statsType, maxValueRow, character]
+                                        statsValues[statsType, Constant.MinValueRow, character],
+                                        statsValues[statsType, Constant.MaxValueRow, character]
                                     );
                                     userValue = Convert.ToSingle(Console.ReadLine());
                                     validInput = Check.InRange(
                                         userValue,
-                                        statsValues[statsType, 0, character],
-                                        statsValues[statsType, 1, character]
+                                        statsValues[statsType, Constant.MinValueRow, character],
+                                        statsValues[statsType, Constant.MaxValueRow, character]
                                     );
                                     if (!validInput)
                                     {
@@ -166,18 +166,18 @@ namespace Game
                                             Console.WriteLine(Constant.DefaultHeroStatsMsg);
                                             maxStats[character, statsType] = statsValues[
                                                 statsType,
-                                                0,
+                                                Constant.MinValueRow,
                                                 character
                                             ];
                                         }
                                     }
                                     else
                                     {
-                                        remainingAttempts = Constant.MaxAttempts;
-                                        hasRemainingAttempts = Check.GreaterThan(remainingAttempts);
                                         maxStats[character, statsType] = userValue;
                                     }
                                 } while (!validInput && hasRemainingAttempts);
+                                remainingAttempts = Constant.MaxAttempts;
+                                hasRemainingAttempts = Check.GreaterThan(remainingAttempts);
                             }
                         }
                     }
@@ -193,146 +193,200 @@ namespace Game
                                 difficulty
                             );
                         }
-                        currentStats = maxStats;
-                        while ((Alive[0] || Alive[1] || Alive[2] || Alive[3]) && Alive[4])
+                    }
+
+                    for(int i=0; i< maxStats.GetLength(0); i++)
+                    {
+                        for(int j = 0; j< maxStats.GetLength(1); j++)
                         {
-                            Battle.RandomOrder(randomTurns);
-                            for (int character = 0; character < characters.Length; character++)
+                            currentStats[i, j] = maxStats[i,j];
+                        }
+                    }
+                    //Start Battle phase
+                    while (
+                        (
+                            Alive[Constant.ArcherId]
+                            || Alive[Constant.BarbarianId]
+                            || Alive[Constant.MageId]
+                            || Alive[Constant.DruidId]
+                        ) && Alive[Constant.MonsterId]
+                    )
+                    {
+                        Console.WriteLine(Constant.Round, roundCounter);
+
+                        //Random Attack order Method
+                        Battle.RandomOrder(randomTurns);
+                        for (int character = 0; character < characters.Length; character++)
+                        {
+                            // character <4 are heroes
+                            if (character < Constant.MonsterId && Alive[Constant.MonsterId])
                             {
-                                if (character < 4)
-                                {
-                                    if (
-                                        Check.GreaterThan(
-                                            currentStats[randomTurns[character], Constant.HpValueColumn]
-                                        )
+                                if (
+                                    Check.GreaterThan(
+                                        currentStats[randomTurns[character], Constant.HpValueColumn]
                                     )
-                                    {
-                                        Console.WriteLine(
-                                            Constant.RequestCommandMsg,
-                                            names[randomTurns[character]]
-                                        );
-                                        do
-                                        {
-                                            userCommand = Console.ReadLine() ?? "";
-                                            validInput = Check.ValidateInput(
-                                                userCommand,
-                                                threeValidInputs
-                                            );
-                                            Msg.ValidateInput(
-                                                ref remainingAttempts,
-                                                ref hasRemainingAttempts,
-                                                validInput,
-                                                Constant.DefaultCommandMsg
-                                            );
-
-                                            if (
-                                                userCommand.Equals(Constant.TwoStr)
-                                                && Check.GreaterThan(
-                                                    currentCoolDown[randomTurns[character]]
-                                                )
-                                            )
-                                            {
-                                                Msg.NoticeOnCoolDown(
-                                                    currentCoolDown[randomTurns[character]]
-                                                );
-                                                validInput = !validInput;
-                                            }
-                                            ;
-                                        } while (!validInput && hasRemainingAttempts);
-                                        if (hasRemainingAttempts)
-                                        {
-                                            switch (userCommand)
-                                            {
-                                                case "1":
-                                                    Battle.Attack(
-                                                        randomTurns[character],
-                                                        4,
-                                                        currentStats,
-                                                        names
-                                                    );
-                                                    break;
-
-                                                case "3":
-                                                    isGuarding[randomTurns[character]] = true;
-                                                    break;
-                                                case "2":
-                                                    switch (randomTurns[character])
-                                                    {
-                                                        case 0:
-                                                            Battle.ArcherAbility(
-                                                                randomTurns[character],
-                                                                4,
-                                                                ref monsterStun,
-                                                                abilityEffect,
-                                                                currentCoolDown,
-                                                                names
-                                                            );
-                                                            break;
-                                                        case 1:
-                                                            Battle.BarbarianAbility(
-                                                                 randomTurns[character],
-                                                                 ref BarbarianAbilityDuracion,
-                                                                 currentCoolDown,
-                                                                 currentStats,
-                                                                 abilityEffect,
-                                                                 names
-                                                             );
-                                                            break;
-                                                        case 2:
-                                                            Battle.MageAbility(
-                                                                randomTurns[character],
-                                                                4,
-                                                                abilityEffect,
-                                                                currentCoolDown,
-                                                                currentStats,
-                                                                names
-                                                            );
-                                                            break;
-                                                        case 3:
-                                                            Battle.DruidAbility(
-                                                                randomTurns[character],
-                                                                currentStats,
-                                                                maxStats,
-                                                                abilityEffect,
-                                                                names
-                                                            );
-                                                            break;
-                                                    }
-                                                    break;
-                                            }
-                                        }
-                                        
-                                        Alive[4] = Check.GreaterThan(currentStats[4, 0]);
-
-                                    }
-                                }else if(!Check.GreaterThan(monsterStun))
+                                )
                                 {
-                                    Console.WriteLine(Constant.MonseterAttackMsg, names[4]);
-                                    for(int objective = 0; objective < characters.Length - 1; objective++)
+                                    Console.WriteLine(
+                                        Constant.RequestCommandMsg,
+                                        names[randomTurns[character]]
+                                    );
+                                    do
                                     {
-                                        if (Check.GreaterThan(currentStats[objective,0])) 
+                                        userCommand = Console.ReadLine() ?? "";
+                                        validInput = Check.ValidateInput(
+                                            userCommand,
+                                            threeValidInputs
+                                        );
+                                        Msg.ValidateInput(
+                                            ref remainingAttempts,
+                                            ref hasRemainingAttempts,
+                                            validInput,
+                                            Constant.DefaultCommandMsg
+                                        );
+                                        //if ability is on cooldown, user can repeat the insert
+                                        if (
+                                            userCommand.Equals(Constant.TwoStr)
+                                            && Check.GreaterThan(
+                                                currentCoolDown[randomTurns[character]]
+                                            )
+                                        )
                                         {
-                                            Battle.Attack(4, objective, currentStats, names, isGuarding[objective]);
+                                            Msg.NoticeOnCoolDown(
+                                                currentCoolDown[randomTurns[character]]
+                                            );
+                                            validInput = !validInput;
                                         }
-                                        Alive[objective] = Check.GreaterThan(currentStats[objective, 0]);
-                                    }
-                                    for (int i = 0; i < Alive.Length; i++)
+                                        ;
+                                    } while (!validInput && hasRemainingAttempts);
+
+                                    //The first switch is for common commands, and the nested one is for choosing the skill
+                                    if (hasRemainingAttempts)
                                     {
-                                        Alive[i] = Check.GreaterThan(currentStats[i,0]);
+                                        switch (userCommand)
+                                        {
+                                            case "1":
+                                                Battle.Attack(
+                                                    randomTurns[character],
+                                                    Constant.MonsterId,
+                                                    currentStats,
+                                                    names
+                                                );
+                                                break;
+
+                                            case "3":
+                                                isGuarding[randomTurns[character]] = true;
+                                                break;
+                                            case "2":
+                                                switch (randomTurns[character])
+                                                {
+                                                    case 0:
+                                                        Battle.ArcherAbility(
+                                                            randomTurns[character],
+                                                            Constant.MonsterId,
+                                                            ref monsterStun,
+                                                            abilityEffect,
+                                                            currentCoolDown,
+                                                            names
+                                                        );
+                                                        break;
+                                                    case 1:
+                                                        Battle.BarbarianAbility(
+                                                            randomTurns[character],
+                                                            ref BarbarianAbilityDuracion,
+                                                            currentCoolDown,
+                                                            currentStats,
+                                                            abilityEffect,
+                                                            names
+                                                        );
+                                                        break;
+                                                    case 2:
+                                                        Battle.MageAbility(
+                                                            randomTurns[character],
+                                                            Constant.MonsterId,
+                                                            abilityEffect,
+                                                            currentCoolDown,
+                                                            currentStats,
+                                                            names
+                                                        );
+                                                        break;
+                                                    case 3:
+                                                        Battle.DruidAbility(
+                                                            randomTurns[character],
+                                                            currentCoolDown,
+                                                            currentStats,
+                                                            maxStats,
+                                                            abilityEffect,
+                                                            names
+                                                        );
+                                                        break;
+                                                }
+                                                break;
+                                        }
                                     }
+                                    //Check if the monster is still alive when an hero finishes turn
+                                    Alive[Constant.MonsterId] = Check.GreaterThan(
+                                        currentStats[Constant.MonsterId, Constant.HpId]
+                                    );
+                                }
+                            }      //if !character<4 and monster isn't stunned then attacks
+                            else if (!Check.GreaterThan(monsterStun))
+                            {
+                                Console.WriteLine(
+                                    Constant.MonseterAttackMsg,
+                                    names[Constant.MonsterId]
+                                );
+                                for (
+                                    int objective = 0;
+                                    objective < characters.Length - 1;
+                                    objective++
+                                )
+                                {
+                                    if (Check.GreaterThan(currentStats[objective, Constant.HpId]))
+                                    {
+                                        Battle.Attack(
+                                            Constant.MonsterId,
+                                            objective,
+                                            currentStats,
+                                            names,
+                                            isGuarding[objective]
+                                        );
+                                    }
+                                    //After attack Check if hero is strill alive
+                                    Alive[objective] = Check.GreaterThan(
+                                        currentStats[objective, Constant.HpId]
+                                    );
+                                }
+                                for (int i = 0; i < Alive.Length; i++)
+                                {
+                                    Alive[i] = Check.GreaterThan(currentStats[i, Constant.HpId]);
                                 }
                             }
-                            Battle.ShowStats(currentStats, names);
-                            BarbarianAbilityDuracion--;
-                            if (Check.GreaterThan(BarbarianAbilityDuracion))
-                                currentStats[1, 2] = maxStats[1, 2];
-                            monsterStun--;
-                            roundCounter++;
-                            for(int i = 0; i < currentCoolDown.Length; i++)
-                            {
-                                currentCoolDown[i]--;
-                            }
-                            
+                        }
+                        //Display the lives in descending order 
+                        
+                        Battle.ShowStats(currentStats,names);
+
+                        //Reset of variables
+                        BarbarianAbilityDuracion--;
+                        if (!Check.GreaterThan(BarbarianAbilityDuracion))
+                        {
+                            currentStats[Constant.BarbarianId, Constant.ReductionId] = maxStats[
+                                Constant.BarbarianId,
+                                Constant.ReductionId
+                            ];
+                        };
+
+                        for (int i = 0;i < randomTurns.Length; i++)
+                        {
+                            randomTurns[i] = Constant.MonsterId;
+                        }
+                        
+                        monsterStun--;
+                        roundCounter++;
+                        for (int i = 0; i < currentCoolDown.Length; i++)
+                        {
+                            currentCoolDown[i]--;
                         }
                     }
                 }
