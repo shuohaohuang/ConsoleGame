@@ -127,6 +127,79 @@ namespace Game
                     }
                 }
 
+                if (userCommand.ToUpper().Equals(Constant.Yes))
+                {
+                    for (int i = 0; i < names.Length; i++)
+                    {
+                        string oldName = names[i];
+                        Console.WriteLine(Constant.RequestNameMsg, names[i]);
+                        names[i] = Utility.NameMayus(Console.ReadLine() ?? names[i]);
+                    }
+                }
+                if (difficulty.Equals(Constant.DifficultyPersonalized))
+                {
+                    for (int character = 0; character < characters.Length; character++)
+                    {
+                        int minValueRow = 0,
+                            maxValueRow = 1;
+
+                        for (int statsType = 0; statsType < 3; statsType++)
+                        {
+                            do
+                            {
+                                Console.WriteLine(
+                                    $"{Constant.InsertRequestMsg}\n {StatsRequirementMsg[statsType]}",
+                                    statsValues[statsType, minValueRow, character],
+                                    statsValues[statsType, maxValueRow, character]
+                                );
+                                userValue = Convert.ToSingle(Console.ReadLine());
+                                validInput = Check.InRange(
+                                    userValue,
+                                    statsValues[statsType, 0, character],
+                                    statsValues[statsType, 1, character]
+                                );
+                                if (!validInput)
+                                {
+                                    remainingAttempts--;
+                                    hasRemainingAttempts = Check.GreaterThan(remainingAttempts);
+
+                                    if (hasRemainingAttempts)
+                                    {
+                                        Console.WriteLine(Constant.ErrorMsg);
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine(Constant.DefaultHeroStatsMsg);
+                                        maxValues[character, statsType] = statsValues[
+                                            statsType,
+                                            0,
+                                            character
+                                        ];
+                                    }
+                                }
+                                else
+                                {
+                                    remainingAttempts = Constant.MaxAttempts;
+                                    hasRemainingAttempts = Check.GreaterThan(remainingAttempts);
+                                    maxValues[character, statsType] = userValue;
+                                }
+                            } while (!validInput && hasRemainingAttempts);
+                        }
+                    }
+                }
+                else
+                {
+                    for (int character = 0; character < characters.Length; character++)
+                    {
+                        Stat.SetPlayerCap(
+                            character,
+                            statsValues,
+                            maxValues,
+                            isHero[character],
+                            difficulty
+                        );
+                    }
+                }
 
             }
         }
