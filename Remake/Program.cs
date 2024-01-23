@@ -16,10 +16,10 @@ namespace Game
         {
             int roundCounter = 0,
                 remainingAttempts = Constant.MaxAttempts;
-            int[] characters =  { 0, 1, 2, 3, 4 },
-                randomTurns =  { 4, 4, 4, 4 },
-                abilityEffect =  { 2, 100, 3, 500 },
-                currentCoolDown =  { 0, 0, 0, 0 };
+            int[] characters = { 0, 1, 2, 3, 4 },
+                randomTurns = { 4, 4, 4, 4 },
+                abilityEffect = { 2, 100, 3, 500 },
+                currentCoolDown = { 0, 0, 0, 0 };
             float userValue;
 
             float[,,] statsValues =
@@ -44,9 +44,9 @@ namespace Game
             bool validInput,
                 hasRemainingAttemptsMenu = true,
                 hasRemainingAttempts = true;
-            bool[] isHero =  { true, true, true, true, false },
-                isGuarding =  { false, false, false, false },
-                Alive =  { true, true, true, true, true };
+            bool[] isHero = { true, true, true, true, false },
+                isGuarding = { false, false, false, false },
+                Alive = { true, true, true, true, true };
 
             string userCommand,
                 difficulty = "0";
@@ -70,7 +70,7 @@ namespace Game
                         Constant.AttackMenuMsg + Constant.RangedInMsg,
                         Constant.DmgReductionMenuMsg + Constant.RangedInMsg
                     ],
-                boolValidInputs =  { Constant.Yes, Constant.No };
+                boolValidInputs = { Constant.Yes, Constant.No };
 
             Console.WriteLine(Constant.MenuMsg);
             do
@@ -84,7 +84,25 @@ namespace Game
                     Constant.ErrorEndMsg
                 );
             } while (!validInput && hasRemainingAttemptsMenu);
-
+            if (userCommand.Equals(Constant.OneStr))
+            {
+                //difficulty Selector
+                Console.WriteLine(Constant.DifficultyMenuMsg);
+                do
+                {
+                    userCommand = Console.ReadLine() ?? "";
+                    validInput = Check.ValidateInput(userCommand, fourValidInputs);
+                    Msg.ValidateInput(
+                        ref remainingAttempts,
+                        ref hasRemainingAttemptsMenu,
+                        validInput,
+                        Constant.ErrorEndMsg
+                    );
+                    difficulty = userCommand;
+                } while (!validInput && hasRemainingAttemptsMenu);
+    
+                
+            }
         }
     }
 }
