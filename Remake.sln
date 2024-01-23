@@ -3,21 +3,23 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34408.163
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remake", "Remake\Remake.csproj", "{1E4D2846-1C1A-4A02-B64B-27CCC5F5F0DC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Remake", "Remake\Remake.csproj", "{1E4D2846-1C1A-4A02-B64B-27CCC5F5F0DC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{82515787-57DB-4382-BD1C-F97E7574C974}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Checker", "libraries\Checker\Checker.csproj", "{7062FBB7-91EA-4E4C-ACDD-D6029B829FD7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Checker", "libraries\Checker\Checker.csproj", "{7062FBB7-91EA-4E4C-ACDD-D6029B829FD7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Constants", "Constants\Constants.csproj", "{53018E9D-E340-4E1F-A8D7-301777799926}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Constants", "Constants\Constants.csproj", "{53018E9D-E340-4E1F-A8D7-301777799926}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stats", "Stats\Stats.csproj", "{4CF772A8-D4FA-41EE-AADF-C6A3C8F3CA5F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stats", "Stats\Stats.csproj", "{4CF772A8-D4FA-41EE-AADF-C6A3C8F3CA5F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities", "Utilities\Utilities.csproj", "{F1FF6440-5614-4B12-9482-458BD6AA9CAC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utilities", "Utilities\Utilities.csproj", "{F1FF6440-5614-4B12-9482-458BD6AA9CAC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Messages", "Messages\Messages.csproj", "{69EA04CD-624D-4076-89DF-64D7D2CFB637}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messages", "Messages\Messages.csproj", "{69EA04CD-624D-4076-89DF-64D7D2CFB637}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Battle", "Battle\Battle.csproj", "{F46C737C-1FC5-40FA-B4CA-1228C783F3CA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Battle", "Battle\Battle.csproj", "{F46C737C-1FC5-40FA-B4CA-1228C783F3CA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestRemake", "TestRemake\TestRemake.csproj", "{479795B0-BFA1-40F8-922D-A034B7F100E8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,6 +55,10 @@ Global
 		{F46C737C-1FC5-40FA-B4CA-1228C783F3CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F46C737C-1FC5-40FA-B4CA-1228C783F3CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F46C737C-1FC5-40FA-B4CA-1228C783F3CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{479795B0-BFA1-40F8-922D-A034B7F100E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{479795B0-BFA1-40F8-922D-A034B7F100E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{479795B0-BFA1-40F8-922D-A034B7F100E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{479795B0-BFA1-40F8-922D-A034B7F100E8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

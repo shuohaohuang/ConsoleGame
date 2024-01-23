@@ -155,7 +155,7 @@ namespace Game
                                     if (!validInput)
                                     {
                                         remainingAttempts--;
-                                        hasRemainingAttempts = Check.GreaterThan(remainingAttempts);
+                                        hasRemainingAttempts = Check.GreaterThanZero(remainingAttempts);
 
                                         if (hasRemainingAttempts)
                                         {
@@ -177,7 +177,7 @@ namespace Game
                                     }
                                 } while (!validInput && hasRemainingAttempts);
                                 remainingAttempts = Constant.MaxAttempts;
-                                hasRemainingAttempts = Check.GreaterThan(remainingAttempts);
+                                hasRemainingAttempts = Check.GreaterThanZero(remainingAttempts);
                             }
                         }
                     }
@@ -222,7 +222,7 @@ namespace Game
                             if (character < Constant.MonsterId && Alive[Constant.MonsterId])
                             {
                                 if (
-                                    Check.GreaterThan(
+                                    Check.GreaterThanZero(
                                         currentStats[randomTurns[character], Constant.HpValueColumn]
                                     )
                                 )
@@ -247,7 +247,7 @@ namespace Game
                                         //if ability is on cooldown, user can repeat the insert
                                         if (
                                             userCommand.Equals(Constant.TwoStr)
-                                            && Check.GreaterThan(
+                                            && Check.GreaterThanZero(
                                                 currentCoolDown[randomTurns[character]]
                                             )
                                         )
@@ -325,12 +325,12 @@ namespace Game
                                         }
                                     }
                                     //Check if the monster is still alive when an hero finishes turn
-                                    Alive[Constant.MonsterId] = Check.GreaterThan(
+                                    Alive[Constant.MonsterId] = Check.GreaterThanZero(
                                         currentStats[Constant.MonsterId, Constant.HpId]
                                     );
                                 }
                             }      //if !character<4 and monster isn't stunned then attacks
-                            else if (!Check.GreaterThan(monsterStun))
+                            else if (!Check.GreaterThanZero(monsterStun))
                             {
                                 Console.WriteLine(
                                     Constant.MonseterAttackMsg,
@@ -342,7 +342,7 @@ namespace Game
                                     objective++
                                 )
                                 {
-                                    if (Check.GreaterThan(currentStats[objective, Constant.HpId]))
+                                    if (Check.GreaterThanZero(currentStats[objective, Constant.HpId]))
                                     {
                                         Battle.Attack(
                                             Constant.MonsterId,
@@ -353,13 +353,13 @@ namespace Game
                                         );
                                     }
                                     //After attack Check if hero is strill alive
-                                    Alive[objective] = Check.GreaterThan(
+                                    Alive[objective] = Check.GreaterThanZero(
                                         currentStats[objective, Constant.HpId]
                                     );
                                 }
                                 for (int i = 0; i < Alive.Length; i++)
                                 {
-                                    Alive[i] = Check.GreaterThan(currentStats[i, Constant.HpId]);
+                                    Alive[i] = Check.GreaterThanZero(currentStats[i, Constant.HpId]);
                                 }
                             }
                         }
@@ -369,7 +369,7 @@ namespace Game
 
                         //Reset of variables
                         BarbarianAbilityDuracion--;
-                        if (!Check.GreaterThan(BarbarianAbilityDuracion))
+                        if (!Check.GreaterThanZero(BarbarianAbilityDuracion))
                         {
                             currentStats[Constant.BarbarianId, Constant.ReductionId] = maxStats[
                                 Constant.BarbarianId,

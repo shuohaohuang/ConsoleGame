@@ -8,7 +8,7 @@ namespace Menssages
         public static void ErrorCommand(ref bool moreAttempts, ref int attempts, string outOfAttempts)
         {
             attempts--;
-            moreAttempts = Check.GreaterThan(attempts);
+            moreAttempts = Check.GreaterThanZero(attempts);
             Console.WriteLine(
                 moreAttempts
                     ? Constant.ErrorMsg
@@ -16,16 +16,12 @@ namespace Menssages
             );
         }
 
-        public static void CurrentHp(float[] Hp, string[] names)
-        {
-
-        }
         public static void ValidateInput(ref int remainingAttempts, ref bool hasMoreAttempts, bool validInput, string ErrorOutOfAttemptsMsg)
         {
             if (!validInput)
             {
                 remainingAttempts--;
-                hasMoreAttempts = Check.GreaterThan(remainingAttempts);
+                hasMoreAttempts = Check.GreaterThanZero(remainingAttempts);
                 Console.WriteLine(
                     hasMoreAttempts ? Constant.ErrorMsg : ErrorOutOfAttemptsMsg
                 );
@@ -33,10 +29,10 @@ namespace Menssages
             else
             {
                 remainingAttempts = Constant.MaxAttempts;
-                hasMoreAttempts = Check.GreaterThan(remainingAttempts);
+                hasMoreAttempts = Check.GreaterThanZero(remainingAttempts);
             }
-
         }
+
         public static void NoticeOnCoolDown(int RemainingCD)
         {
             Console.WriteLine(Constant.OnCooldown, RemainingCD);

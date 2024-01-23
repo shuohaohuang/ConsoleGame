@@ -10,7 +10,7 @@
 
             for (int i = 0; i < validStrings.Length && !Checker; i++)
             {
-                Checker = input.Equals(validStrings[i]);
+                Checker = input.Equals(validStrings[i].ToUpper());
             }
             return Checker;
         }
@@ -26,20 +26,12 @@
         }
 
 
-        public static bool GreaterThan(float number)
+        public static bool GreaterThanZero(float number)
         {
             const int Zero = 0;
             return number > Zero;
         }
 
-        public static bool GreaterThan(float number, int compared)
-        {
-            return number > compared;
-        }
 
-        public static bool GreaterThan(float number, float compared)
-        {
-            return number > compared;
-        }
     }
 }

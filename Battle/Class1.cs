@@ -1,11 +1,5 @@
 ﻿using Constants;
 using Checker;
-using System.Security;
-using static System.Net.Mime.MediaTypeNames;
-using System.Threading;
-using System.Diagnostics.Metrics;
-using System.Globalization;
-
 namespace BattleMethod
 {
     public class Battle
@@ -77,11 +71,11 @@ namespace BattleMethod
                 ? defenderReduction * Constant.GuardEffect
                 : defenderReduction;
             if (criticAttack)
-                return Math.Abs(
+                return (float)Math.Round(Math.Abs(
                     attackerAd * (One - (defenderReduction / Percentage)) * CriticalEffect
-                );
+                ),2);
 
-            return Math.Abs(attackerAd * (One - (defenderReduction / Percentage)));
+            return (float)Math.Round(Math.Abs(attackerAd * (One - (defenderReduction / Percentage))),2);
         }
 
         public static float CalculateDamage(
@@ -163,7 +157,7 @@ namespace BattleMethod
         {
             currentCD[casterId] = Constant.SkillCd;
             for (int i = 0; i < currentStats.GetLength(0)-1; i++){
-                if (Check.GreaterThan(currentStats[i,0]))
+                if (Check.GreaterThanZero(currentStats[i,0]))
                 {
                     float HealAmount = currentStats[i, 0] + abilityEffect[casterId] > maxStats[i, 0] 
                         ? (maxStats[i, 0] - currentStats[i, 0]) 
